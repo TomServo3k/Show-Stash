@@ -131,5 +131,10 @@ The package should include `manifest`, `source/`, `components/`, and `images/`.
 
 ## Copyright
 
-Copyright (c) 2026 by Pearl Lane, LLC; web: https://pearllane.com, email: hello@pearllane.com
-Pearl Lane, LLC | 12128 N Division St Ste 1520 | Spokane, WA 99218
+Copyright (c) 2026 by Pearl Lane, LLC
+Website: https://pearllane.com
+Support: hello@pearllane.com
+
+Pearl Lane, LLC
+12128 N Division St Ste 1520
+Spokane, WA 99218
