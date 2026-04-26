@@ -1,8 +1,8 @@
 title=Show Stash
 major_version=1
-minor_version=5
+minor_version=8
 build_version=00001
 ui_resolutions=FHD
 TMDb_api_key=09b0aa5620c4b0b9e54d914dc1bcd53f
-mm_icon_focus_hd=pkg:/images/Show Stash Icon.jpg
-mm_icon_side_hd=pkg:/images/Show Stash Icon.jpg
+mm_icon_focus_hd=pkg:/images/Show Stash Icon with Moustache.png
+mm_icon_side_hd=pkg:/images/Show Stash Icon with Moustache.png

@@ -62,7 +62,12 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         end if
     end if
 
-    if (key = "back" or key = "delete") and m.shows.count() > 0
+    if key = "back"
+        m.top.close = true
+        return true
+    end if
+
+    if key = "rewind" and m.shows.count() > 0
         showDeleteDialog(m.showList.itemFocused)
         return true
     end if
@@ -243,6 +248,7 @@ sub refreshList()
         for each show in m.shows
             child = root.createChild("ContentNode")
             child.title = show.title + "  —  " + show.service
+            ' child.title = show.title + "  on  " + show.service
         end for
         m.showList.content = root
         m.showList.setFocus(true)

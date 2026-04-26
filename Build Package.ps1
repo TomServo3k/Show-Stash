@@ -5,7 +5,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# Work relative to this script's folder (more reliable than current directory)
+# Work relative to this script's folder
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 $ManifestPath = Join-Path $Root 'manifest'
@@ -14,6 +14,11 @@ $Components   = Join-Path $Root 'components'
 $Images       = Join-Path $Root 'images'
 $Source       = Join-Path $Root 'source'
 $BackupsDir   = Join-Path $Root 'Backups'
+
+# ---- OPTIONAL: Hardcode 7z.exe path if needed ----
+# If 7z.exe is in PATH, just use:
+$SevenZip = "C:\Program Files\7-Zip\7z.exe"
+#$SevenZip = "7z.exe"
 
 function Get-VersionFromManifest {
     param(
@@ -27,7 +32,7 @@ function Get-VersionFromManifest {
 
     $raw = Get-Content -LiteralPath $Path -Raw
 
-    # 1) Try JSON: { "major_version": 1, "minor_version": 2 }
+    # 1) Try JSON
     try {
         $json = $raw | ConvertFrom-Json -ErrorAction Stop
         if ($null -ne $json.major_version -and $null -ne $json.minor_version) {
@@ -36,11 +41,9 @@ function Get-VersionFromManifest {
                 Minor = [int]$json.minor_version
             }
         }
-    } catch {
-        # ignore, try next format
-    }
+    } catch {}
 
-    # 2) Try XML: <manifest><major_version>1</major_version><minor_version>2</minor_version></manifest>
+    # 2) Try XML
     try {
         [xml]$xml = $raw
         $majNode = $xml.SelectSingleNode('//*[local-name()="major_version"]')
@@ -51,13 +54,9 @@ function Get-VersionFromManifest {
                 Minor = [int]$minNode.InnerText
             }
         }
-    } catch {
-        # ignore, try next format
-    }
+    } catch {}
 
-    # 3) Try key/value lines:
-    # major_version=1
-    # minor_version: 2
+    # 3) Try key/value
     $maj = $null
     $min = $null
 
@@ -70,10 +69,10 @@ function Get-VersionFromManifest {
         return @{ Major = $maj; Minor = $min }
     }
 
-    throw "Could not find major_version and minor_version in manifest. Supported formats: JSON, XML, or key/value lines."
+    throw "Could not find major_version and minor_version in manifest."
 }
 
-# ---- Validate inputs exist (fail fast with clear errors) ----
+# ---- Validate inputs exist ----
 $requiredPaths = @(
     $ManifestPath, $ReadmePath,
     $Components, $Images, $Source
@@ -98,8 +97,12 @@ if (-not (Test-Path -LiteralPath $BackupsDir)) {
 $zipName = "Show Stash $major.$minor.zip"
 $zipPath = Join-Path $BackupsDir $zipName
 
-# ---- Collect items to zip ----
-# Compress-Archive needs paths; include the folder paths themselves so structure is preserved
+# ---- Remove old zip if exists ----
+if (Test-Path -LiteralPath $zipPath) {
+    Remove-Item -LiteralPath $zipPath -Force
+}
+
+# ---- Build 7z command ----
 $itemsToZip = @(
     $ManifestPath,
     $ReadmePath,
@@ -108,11 +111,26 @@ $itemsToZip = @(
     $Source
 )
 
-# If a previous zip exists, overwrite it
-if (Test-Path -LiteralPath $zipPath) {
-    Remove-Item -LiteralPath $zipPath -Force
+# Quote a single argument for 7z
+function Quote {
+    param([string]$s)
+    '"' + $s.Replace('"', '\"') + '"'
 }
 
-Compress-Archive -Path $itemsToZip -DestinationPath $zipPath -Force
+# 7z syntax: 7z a -tzip -y "output.zip" "item1" "item2" ...
+$argParts = @(
+    "a",
+    "-tzip",
+    "-y",
+    (Quote $zipPath)          # <-- MUST be wrapped in parentheses
+) + ($itemsToZip | ForEach-Object { Quote $_ })
+
+$argumentString = $argParts -join ' '
+
+$process = Start-Process -FilePath $SevenZip -ArgumentList $argumentString -NoNewWindow -Wait -PassThru
+
+if ($process.ExitCode -ne 0) {
+    throw "7-Zip failed with exit code $($process.ExitCode). Command line: $SevenZip $argumentString"
+}
 
 Write-Host "Created: $zipPath"

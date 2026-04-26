@@ -36,7 +36,7 @@
                    font="font:SmallSystemFont"/>
         </Group>
 
-        <Label text="Copyright (c) 2026 by , LLC, Website: https://pearllane.com, Support: hello@pearllane.com"
+        <Label text="Copyright (c) 2026 Pearl Lane, LLC - https://PearlLane.com/ShowStash - Support: hello@PearlLane.com"
                translation="[80, 960]"
                width="1760"
                wrap="true"

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component name="MainScene" extends="Scene">
     <script type="text/brightscript" uri="pkg:/components/MainScene.brs"/>
+    <interface>
+        <field id="close" type="bool"/>
+    </interface>
     <children>
         <Rectangle color="0x1A1A2EFF" width="1920" height="1080"/>
 
-        <Label text="Show Stash by Pearl Lane&tm;"
+        <Label text="Show Stash™"
                translation="[80, 55]"
                font="font:LargeBoldSystemFont"
                color="0xFFFFFFFF"/>
@@ -31,7 +34,7 @@
                    visible="false"/>
 
         <Label id="hintBar"
-               text="[OK] Launch Service     [*] Add Show     [Play] Settings     [Back/Delete] Remove Show"
+               text="[OK] Launch Service    [*] Add Show    [Play] Settings    [Rewind] Remove Show    [Back/Home] Exit"
                translation="[80, 1022]"
                color="0x666666FF"
                font="font:SmallSystemFont"/>

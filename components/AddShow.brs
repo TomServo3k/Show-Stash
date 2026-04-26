@@ -57,6 +57,7 @@ end sub
 sub showNameDialog()
     m.nameDialog = CreateObject("roSGNode", "KeyboardDialog")
     m.nameDialog.title = "Add Show"
+    m.nameDialog.text = m.showName
     m.nameDialog.buttons = ["OK", "Cancel"]
     m.nameDialog.observeField("buttonSelected", "onNameDialogButtonSelected")
     m.nameDialog.observeField("wasClosed", "onNameDialogClosed")
