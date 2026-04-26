@@ -43,7 +43,7 @@ The app is meant for the common living-room problem: everyone remembers the show
 
 TMDb lookup uses the `TMDbApiKey` value stored in the Roku registry. Users can edit this from the Settings screen.
 
-The app can also read a fallback `TMDb_api_key` value from `manifest`. For a public GitHub repository, do not commit a private TMDb API key. Use the Settings screen on each device, local development overrides, or another secret-handling approach instead.
+Do not commit private TMDb API keys to this repository. Use the Settings screen on each Roku device to store the key locally.
 
 TMDb attribution is shown on the Settings screen:
 
@@ -92,6 +92,11 @@ This is a standard Roku SceneGraph channel written in BrightScript and SceneGrap
 .
 |-- manifest
 |-- README.md
+|-- CHANGELOG.md
+|-- CONTRIBUTING.md
+|-- LICENSE
+|-- SECURITY.md
+|-- TRADEMARKS.md
 |-- source/
 |   `-- main.brs
 |-- components/
@@ -110,8 +115,21 @@ This is a standard Roku SceneGraph channel written in BrightScript and SceneGrap
 |   |-- LaunchTask.brs
 |   |-- FirebaseTask.xml
 |   `-- FirebaseTask.brs
-`-- images/
-    `-- Show Stash Icon with Moustache.png
+|-- docs/
+|   |-- CERTIFICATION_NOTES.md
+|   |-- PRIVACY.md
+|   |-- ROKU_SUBMISSION.md
+|   |-- SUPPORT.md
+|   `-- TERMS.md
+|-- images/
+|   |-- channel-poster_fhd.png
+|   |-- icon_focus_hd.png
+|   |-- icon_focus_sd.png
+|   |-- splash_screen_fhd.png
+|   `-- Show Stash Icon with Moustache.png
+`-- store-assets/
+    |-- store-poster_540x405.png
+    `-- store-screenshot_1920x1080.png
 ```
 
 ### Key Components
@@ -127,13 +145,24 @@ This is a standard Roku SceneGraph channel written in BrightScript and SceneGrap
 ### Sideloading for Testing
 
 1. Enable Developer Mode on the Roku device.
-2. Zip the channel contents from the project root.
-3. Upload the zip through the Roku developer web installer.
+2. Run `Build Package.ps1` to create a clean sideload zip in `Backups/`.
+3. Upload the generated zip through the Roku developer web installer.
 4. Launch the sideloaded channel on the device.
 
 The package should include `manifest`, `source/`, `components/`, and `images/`.
 
-The included `Build Package.ps1` script can create a packaged zip using the version fields in `manifest`.
+For Roku Developer Dashboard submission, use the Roku device packager to create the signed `.pkg` from the tested sideload zip. See `docs/ROKU_SUBMISSION.md`.
+
+### Roku Submission
+
+Submission preparation lives in `docs/ROKU_SUBMISSION.md`. Important supporting docs are:
+
+- `docs/PRIVACY.md`
+- `docs/TERMS.md`
+- `docs/SUPPORT.md`
+- `docs/CERTIFICATION_NOTES.md`
+
+The `store-assets/` folder contains starter Channel Store artwork. Replace the starter screenshot with real on-device screenshots before public submission.
 
 ## Roadmap
 
@@ -155,6 +184,14 @@ Issues and pull requests are welcome. Before opening a pull request:
 3. Bump `minor_version` in `manifest` for each project change.
 4. Avoid committing private API keys, local device credentials, or private Firebase configuration.
 5. Test on a Roku device when the change affects channel behavior.
+
+See `CONTRIBUTING.md` and `SECURITY.md` for more details.
+
+Generated Roku packages, signing credentials, local environment files, Firebase service account files, and editor/system noise are excluded by `.gitignore`.
+
+## Trademarks
+
+Pearl Lane, Show Stash, and the Show Stash TV-face-and-moustache logo are trademarks claimed by Pearl Lane, LLC. Pearl Lane has been submitted as a trademark application and is pending processing. See `TRADEMARKS.md`.
 
 ## Notes
 

@@ -1,24 +1,17 @@
-# New-ShowStashBackup.ps1
-# Zips: manifest, README.md, components/, images/, source/
-# Output: Backups\Show Stash M.m.zip  where M=major_version, m=minor_version
+# Build-ShowStashPackage.ps1
+# Creates a clean sideload zip for Roku development from runtime files only.
+# Output: Backups\Show Stash M.m.zip where M=major_version and m=minor_version.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# Work relative to this script's folder
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 $ManifestPath = Join-Path $Root 'manifest'
-$ReadmePath   = Join-Path $Root 'README.md'
 $Components   = Join-Path $Root 'components'
 $Images       = Join-Path $Root 'images'
 $Source       = Join-Path $Root 'source'
 $BackupsDir   = Join-Path $Root 'Backups'
-
-# ---- OPTIONAL: Hardcode 7z.exe path if needed ----
-# If 7z.exe is in PATH, just use:
-$SevenZip = "C:\Program Files\7-Zip\7z.exe"
-#$SevenZip = "7z.exe"
 
 function Get-VersionFromManifest {
     param(
@@ -31,106 +24,85 @@ function Get-VersionFromManifest {
     }
 
     $raw = Get-Content -LiteralPath $Path -Raw
-
-    # 1) Try JSON
-    try {
-        $json = $raw | ConvertFrom-Json -ErrorAction Stop
-        if ($null -ne $json.major_version -and $null -ne $json.minor_version) {
-            return @{
-                Major = [int]$json.major_version
-                Minor = [int]$json.minor_version
-            }
-        }
-    } catch {}
-
-    # 2) Try XML
-    try {
-        [xml]$xml = $raw
-        $majNode = $xml.SelectSingleNode('//*[local-name()="major_version"]')
-        $minNode = $xml.SelectSingleNode('//*[local-name()="minor_version"]')
-        if ($majNode -and $minNode) {
-            return @{
-                Major = [int]$majNode.InnerText
-                Minor = [int]$minNode.InnerText
-            }
-        }
-    } catch {}
-
-    # 3) Try key/value
-    $maj = $null
-    $min = $null
+    $major = $null
+    $minor = $null
 
     foreach ($line in ($raw -split "`r?`n")) {
-        if (-not $maj -and $line -match '^\s*major_version\s*[:=]\s*(\d+)\s*$') { $maj = [int]$Matches[1] }
-        if (-not $min -and $line -match '^\s*minor_version\s*[:=]\s*(\d+)\s*$') { $min = [int]$Matches[1] }
+        if ($null -eq $major -and $line -match '^\s*major_version\s*[:=]\s*(\d+)\s*$') { $major = [int]$Matches[1] }
+        if ($null -eq $minor -and $line -match '^\s*minor_version\s*[:=]\s*(\d+)\s*$') { $minor = [int]$Matches[1] }
     }
 
-    if ($null -ne $maj -and $null -ne $min) {
-        return @{ Major = $maj; Minor = $min }
+    if ($null -eq $major -or $null -eq $minor) {
+        throw "Could not find major_version and minor_version in manifest."
     }
 
-    throw "Could not find major_version and minor_version in manifest."
+    return @{ Major = $major; Minor = $minor }
 }
 
-# ---- Validate inputs exist ----
-$requiredPaths = @(
-    $ManifestPath, $ReadmePath,
-    $Components, $Images, $Source
-)
+function Get-ManifestAssetPaths {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
 
-foreach ($p in $requiredPaths) {
-    if (-not (Test-Path -LiteralPath $p)) {
-        throw "Required file/folder missing: $p"
+    $raw = Get-Content -LiteralPath $Path
+    $assetKeys = @(
+        'mm_icon_focus_fhd',
+        'mm_icon_focus_hd',
+        'mm_icon_focus_sd',
+        'mm_icon_side_hd',
+        'mm_icon_side_sd',
+        'splash_screen_fhd',
+        'splash_screen_hd',
+        'splash_screen_sd'
+    )
+
+    foreach ($line in $raw) {
+        foreach ($key in $assetKeys) {
+            if ($line -match "^\s*$key\s*=\s*pkg:/(.+?)\s*$") {
+                Join-Path $Root $Matches[1]
+            }
+        }
     }
 }
 
-# ---- Read version ----
-$ver = Get-VersionFromManifest -Path $ManifestPath
-$major = $ver.Major
-$minor = $ver.Minor
+$requiredPaths = @($ManifestPath, $Components, $Images, $Source)
+foreach ($path in $requiredPaths) {
+    if (-not (Test-Path -LiteralPath $path)) {
+        throw "Required file/folder missing: $path"
+    }
+}
 
-# ---- Build output path ----
+foreach ($assetPath in (Get-ManifestAssetPaths -Path $ManifestPath)) {
+    if (-not (Test-Path -LiteralPath $assetPath)) {
+        throw "Manifest asset missing: $assetPath"
+    }
+}
+
+$version = Get-VersionFromManifest -Path $ManifestPath
+$zipName = "Show Stash $($version.Major).$($version.Minor).zip"
+
 if (-not (Test-Path -LiteralPath $BackupsDir)) {
     New-Item -ItemType Directory -Path $BackupsDir | Out-Null
 }
 
-$zipName = "Show Stash $major.$minor.zip"
 $zipPath = Join-Path $BackupsDir $zipName
-
-# ---- Remove old zip if exists ----
 if (Test-Path -LiteralPath $zipPath) {
     Remove-Item -LiteralPath $zipPath -Force
 }
 
-# ---- Build 7z command ----
-$itemsToZip = @(
-    $ManifestPath,
-    $ReadmePath,
-    $Components,
-    $Images,
-    $Source
-)
-
-# Quote a single argument for 7z
-function Quote {
-    param([string]$s)
-    '"' + $s.Replace('"', '\"') + '"'
+$sevenZip = "C:\Program Files\7-Zip\7z.exe"
+if (-not (Test-Path -LiteralPath $sevenZip)) {
+    $sevenZip = "7z.exe"
 }
 
-# 7z syntax: 7z a -tzip -y "output.zip" "item1" "item2" ...
-$argParts = @(
-    "a",
-    "-tzip",
-    "-y",
-    (Quote $zipPath)          # <-- MUST be wrapped in parentheses
-) + ($itemsToZip | ForEach-Object { Quote $_ })
+$itemsToZip = @($ManifestPath, $Components, $Images, $Source)
 
-$argumentString = $argParts -join ' '
+$arguments = @('a', '-tzip', '-y', $zipPath) + $itemsToZip
 
-$process = Start-Process -FilePath $SevenZip -ArgumentList $argumentString -NoNewWindow -Wait -PassThru
-
-if ($process.ExitCode -ne 0) {
-    throw "7-Zip failed with exit code $($process.ExitCode). Command line: $SevenZip $argumentString"
+& $sevenZip @arguments
+if ($LASTEXITCODE -ne 0) {
+    throw "7-Zip failed with exit code $LASTEXITCODE."
 }
 
 Write-Host "Created: $zipPath"

@@ -1,2 +1,44 @@
+# Generated Roku packages and local backups
 Backups/
 *.zip
+*.pkg
+*.pkg.sig
+*.zip.sig
+
+# Roku signing / packaging secrets
+*.pem
+*.key
+*.keystore
+*.p12
+*.pfx
+genkey
+password
+package-password*
+developer-id*
+roku-dev-*
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+secrets/
+*.secret
+*.secrets
+firebase-service-account*.json
+serviceAccount*.json
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*.swo
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
