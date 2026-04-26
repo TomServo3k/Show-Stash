@@ -20,7 +20,7 @@
         <Rectangle color="0x4A4E69FF" width="1760" height="2" translation="[80, 118]"/>
 
         <Label id="emptyLabel"
-               text="No shows added yet.  Press * (Options) to add your first show."
+               text="No shows added yet.  Press Fast Forward to add your first show."
                translation="[80, 200]"
                color="0x888888FF"
                visible="false"/>
@@ -34,7 +34,7 @@
                    visible="false"/>
 
         <Label id="hintBar"
-               text="[OK] Launch Service    [*] Add Show    [Play] Settings    [Rewind] Remove Show    [Back/Home] Exit"
+               text="[OK/Play] Launch    [Fast Forward] Add Show    [*] Settings    [Rewind] Remove Show    [Back/Home] Exit"
                translation="[80, 1022]"
                color="0x666666FF"
                font="font:SmallSystemFont"/>

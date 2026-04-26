@@ -23,16 +23,16 @@ The app is meant for the common living-room problem: everyone remembers the show
 
 1. Launch Show Stash on your Roku.
 2. Create a new household code on the first Roku, or join an existing household from another Roku.
-3. Press `*` / Options to add a show.
+3. Press `Fast Forward` to add a show.
 4. Enter the show name.
 5. Pick the correct TMDb match when available, or choose the streaming service manually.
 6. Select a saved show from the main list to open its streaming service.
 
 ### Controls
 
-- `OK`: Launch the selected show's streaming service or confirm the current selection.
-- `*` / Options: Add a show.
-- `Play`: Open Settings.
+- `OK` or `Play`: Launch the selected show's streaming service or confirm the current selection.
+- `Fast Forward`: Add a show.
+- `*` / Options: Open Settings.
 - `Rewind`: Remove the selected show.
 - `Back`: Return from add/settings flows, or exit the channel from the main screen.
 - `Home`: Exit the channel.
@@ -165,7 +165,7 @@ Issues and pull requests are welcome. Before opening a pull request:
 
 ## License
 
-No open-source license file is included yet. Add a `LICENSE` file before publishing the repository publicly so contributors and users know what rights they have.
+Show Stash is licensed under the GNU General Public License version 3. See `LICENSE` for the full license text and the project-specific GPLv3 section 7 attribution and trademark notices.
 
 ## Acknowledgments
 

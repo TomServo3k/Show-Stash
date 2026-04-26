@@ -34,12 +34,22 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     if not press then return false
 
     if key = "options"
-        showAddOverlay()
+        showSettings()
         return true
     end if
 
     if key = "play"
-        showSettings()
+        launchFocusedShow()
+        return true
+    end if
+
+    if key = "OK" and m.showList.visible
+        launchFocusedShow()
+        return true
+    end if
+
+    if key = "fastforward"
+        showAddOverlay()
         return true
     end if
 
@@ -49,9 +59,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         end if
         m.addOverlay.visible = false
         m.top.setFocus(true)
-        if m.shows.count() > 0
-            m.showList.setFocus(true)
-        end if
+        restoreMainFocus()
         return true
     end if
 
@@ -68,8 +76,20 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     end if
 
     if key = "rewind" and m.shows.count() > 0
-        showDeleteDialog(m.showList.itemFocused)
+        showDeleteDialog(focusedShowIndex())
         return true
+    end if
+
+    if m.showList.visible
+        if key = "up"
+            focusRelativeShow(-1)
+            return true
+        end if
+
+        if key = "down"
+            focusRelativeShow(1)
+            return true
+        end if
     end if
 
     return false
@@ -77,6 +97,11 @@ end function
 
 sub onItemSelected()
     launchShow(m.showList.itemSelected)
+end sub
+
+sub launchFocusedShow()
+    if m.shows.count() = 0 then return
+    launchShow(focusedShowIndex())
 end sub
 
 sub launchShow(idx as Integer)
@@ -131,11 +156,7 @@ sub onDeleteDialogButtonSelected()
         removeShow(idx)
     else
         m.pendingDelete = -1
-        if m.shows.count() > 0
-            m.showList.setFocus(true)
-        else
-            m.top.setFocus(true)
-        end if
+        restoreMainFocus()
     end if
 end sub
 
@@ -143,11 +164,7 @@ sub cancelDelete()
     m.top.dialog = invalid
     m.deleteDialog = invalid
     m.pendingDelete = -1
-    if m.shows.count() > 0
-        m.showList.setFocus(true)
-    else
-        m.top.setFocus(true)
-    end if
+    restoreMainFocus()
 end sub
 
 ' ── Setup ─────────────────────────────────────────────────
@@ -190,8 +207,7 @@ end sub
 sub onAddResult()
     result = m.addOverlay.result
     m.addOverlay.visible = false
-    m.top.setFocus(true)
-    if m.shows.count() > 0 then m.showList.setFocus(true)
+    restoreMainFocus()
 
     if result = invalid or result.title = "" then return
     existingIdx = findShowIndex(result)
@@ -228,10 +244,8 @@ sub onSettingsClosed()
 end sub
 
 sub restoreMainFocus()
+    m.showList.setFocus(false)
     m.top.setFocus(true)
-    if m.shows.count() > 0
-        m.showList.setFocus(true)
-    end if
 end sub
 
 ' ── Display ───────────────────────────────────────────────
@@ -251,7 +265,7 @@ sub refreshList()
             ' child.title = show.title + "  on  " + show.service
         end for
         m.showList.content = root
-        m.showList.setFocus(true)
+        restoreMainFocus()
     end if
 end sub
 
@@ -260,8 +274,36 @@ sub focusShow(idx as Integer)
     if not m.showList.visible then return
 
     m.showList.jumpToItem = idx
-    m.showList.setFocus(true)
+    restoreMainFocus()
 end sub
+
+sub focusRelativeShow(delta as Integer)
+    if m.shows.count() = 0 then return
+
+    idx = focusedShowIndex() + delta
+    if idx < 0
+        idx = 0
+    else if idx >= m.shows.count()
+        idx = m.shows.count() - 1
+    end if
+
+    focusShow(idx)
+end sub
+
+function focusedShowIndex() as Integer
+    if m.shows.count() = 0 then return -1
+
+    idx = m.showList.itemFocused
+    if idx = invalid
+        return 0
+    end if
+
+    if idx < 0 or idx >= m.shows.count()
+        return 0
+    end if
+
+    return idx
+end function
 
 ' ── Firebase ──────────────────────────────────────────────
 
