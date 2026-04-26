@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="MainScene" extends="Scene">
+    <script type="text/brightscript" uri="pkg:/components/MainScene.brs"/>
+    <children>
+        <Rectangle color="0x1A1A2EFF" width="1920" height="1080"/>
+
+        <Label text="Show Stash by Pearl Lane&tm;"
+               translation="[80, 55]"
+               font="font:LargeBoldSystemFont"
+               color="0xFFFFFFFF"/>
+
+        <!-- Household code shown top-right so user can reference it on other TVs -->
+        <Label id="codeLabel"
+               translation="[0, 62]" width="1840" horizAlign="right"
+               color="0x666666FF" font="font:SmallSystemFont"/>
+
+        <Rectangle color="0x4A4E69FF" width="1760" height="2" translation="[80, 118]"/>
+
+        <Label id="emptyLabel"
+               text="No shows added yet.  Press * (Options) to add your first show."
+               translation="[80, 200]"
+               color="0x888888FF"
+               visible="false"/>
+
+        <LabelList id="showList"
+                   translation="[80, 140]"
+                   width="1760"
+                   height="820"
+                   itemSize="[1760, 72]"
+                   itemSpacing="[0, 4]"
+                   visible="false"/>
+
+        <Label id="hintBar"
+               text="[OK] Launch Service     [*] Add Show     [Play] Settings     [Back/Delete] Remove Show"
+               translation="[80, 1022]"
+               color="0x666666FF"
+               font="font:SmallSystemFont"/>
+    </children>
+</component>

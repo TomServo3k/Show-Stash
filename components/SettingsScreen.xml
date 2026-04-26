@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="SettingsScreen" extends="Group">
+    <interface>
+        <field id="apiKey" type="string" alwaysNotify="true"/>
+        <field id="useDisneyForHuluAndESPN" type="boolean" alwaysNotify="true"/>
+        <field id="closed" type="boolean" alwaysNotify="true"/>
+    </interface>
+    <script type="text/brightscript" uri="pkg:/components/SettingsScreen.brs"/>
+    <children>
+        <Rectangle color="0x1A1A2EFF" width="1920" height="1080"/>
+
+        <Label text="Settings"
+               translation="[80, 55]"
+               font="font:LargeBoldSystemFont"
+               color="0xFFFFFFFF"/>
+
+        <Rectangle color="0x4A4E69FF" width="1760" height="2" translation="[80, 118]"/>
+
+        <Group translation="[80, 170]">
+            <Label text="Options"
+                   font="font:MediumBoldSystemFont"
+                   color="0xFFFFFFFF"/>
+
+            <LabelList id="settingsList"
+                       translation="[0, 62]"
+                       width="1400"
+                       height="180"
+                       itemSize="[1400, 72]"
+                       itemSpacing="[0, 6]"/>
+
+            <Label text="This product uses the TMDb API but is not endorsed or certified by TMDb."
+                   translation="[0, 285]"
+                   width="1400"
+                   wrap="true"
+                   color="0xAAAAAAFF"
+                   font="font:SmallSystemFont"/>
+        </Group>
+
+        <Label text="Copyright (c) 2026 by Pearl Lane, LLC | web: https://pearllane.com | email: hello@pearllane.com"
+               translation="[80, 960]"
+               width="1760"
+               wrap="true"
+               color="0x888888FF"
+               font="font:SmallSystemFont"/>
+
+        <Label text="[OK] Edit or Toggle     [Back] Return"
+               translation="[80, 1022]"
+               color="0x666666FF"
+               font="font:SmallSystemFont"/>
+    </children>
+</component>

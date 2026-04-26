@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="AddShow" extends="Group">
+    <interface>
+        <!-- Set to an AA {title, service, appId} on confirm, or invalid on cancel.
+             alwaysNotify fires even when set to the same value, so repeated
+             cancels still trigger the observer in MainScene. -->
+        <field id="result" type="assocarray" alwaysNotify="true"/>
+        <function name="start"/>
+    </interface>
+    <script type="text/brightscript" uri="pkg:/components/AddShow.brs"/>
+    <children>
+        <!-- Dimmed full-screen backdrop -->
+        <Rectangle id="backdrop" color="0x000000CC"
+                   width="1920" height="1080" blendingEnabled="true"/>
+
+        <!-- ── Phase 1: Name entry ── -->
+        <Group id="nameGroup" translation="[492, 140]">
+            <Rectangle color="0x2D2D44FF" width="936" height="260" blendingEnabled="true"/>
+            <Label text="Add Show" translation="[30, 24]"
+                   font="font:MediumBoldSystemFont" color="0xFFFFFFFF"/>
+            <Label text="Enter the show name in the keyboard dialog."
+                   translation="[30, 70]" color="0xAAAAAAFF" font="font:SmallSystemFont"/>
+            <TextEditBox id="nameInput" translation="[30, 110]" width="876"/>
+        </Group>
+
+        <!-- ── Phase 2: Service selection ── -->
+        <Group id="matchGroup" translation="[492, 140]" visible="false">
+            <Rectangle color="0x2D2D44FF" width="936" height="780" blendingEnabled="true"/>
+            <Label id="matchTitle" text="Choose a match"
+                   translation="[30, 24]" font="font:MediumBoldSystemFont" color="0xFFFFFFFF"/>
+            <Label id="matchHint" text="Press Back to edit the name."
+                   translation="[30, 70]" color="0xAAAAAAFF" font="font:SmallSystemFont"/>
+            <LabelList id="matchList"
+                       translation="[30, 110]"
+                       width="876" height="640"
+                       itemSize="[876, 72]" itemSpacing="[0, 4]"/>
+        </Group>
+
+        <Group id="serviceGroup" translation="[492, 140]" visible="false">
+            <Rectangle color="0x2D2D44FF" width="936" height="780" blendingEnabled="true"/>
+            <Label id="serviceTitle" text="Select a service"
+                   translation="[30, 24]" font="font:MediumBoldSystemFont" color="0xFFFFFFFF"/>
+            <Label text="Press Back to edit the name."
+                   translation="[30, 70]" color="0xAAAAAAFF" font="font:SmallSystemFont"/>
+            <LabelList id="serviceList"
+                       translation="[30, 110]"
+                       width="876" height="640"
+                       itemSize="[876, 72]" itemSpacing="[0, 4]"/>
+        </Group>
+    </children>
+</component>

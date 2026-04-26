@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="MetadataSearchTask" extends="Task">
+    <interface>
+        <field id="provider" type="string"/>
+        <field id="query" type="string"/>
+        <field id="result" type="assocarray" alwaysNotify="true"/>
+    </interface>
+    <script type="text/brightscript" uri="pkg:/components/MetadataSearchTask.brs"/>
+    <script type="text/brightscript" uri="pkg:/components/TMDbMetadataProvider.brs"/>
+</component>

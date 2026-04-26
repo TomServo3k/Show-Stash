@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="SetupScreen" extends="Group">
+    <interface>
+        <field id="householdCode" type="string" alwaysNotify="true"/>
+    </interface>
+    <script type="text/brightscript" uri="pkg:/components/SetupScreen.brs"/>
+    <children>
+        <Rectangle color="0x1A1A2EFF" width="1920" height="1080"/>
+
+        <!-- Phase 1: Choose create or join -->
+        <Group id="chooseGroup" translation="[80, 200]">
+            <Label text="Welcome to Show Stash"
+                   font="font:LargeBoldSystemFont" color="0xFFFFFFFF"/>
+            <Label text="To keep your watch list in sync across all your Rokus, set up a household."
+                   translation="[0, 80]" color="0xAAAAAAFF" font="font:MediumSystemFont"/>
+            <LabelList id="optionList" translation="[0, 160]"
+                       width="900" height="200"
+                       itemSize="[900, 80]" itemSpacing="[0, 8]"/>
+        </Group>
+
+        <!-- Phase 2a: Display generated code -->
+        <Group id="createdGroup" translation="[80, 180]" visible="false">
+            <Label text="Your Household Code"
+                   font="font:LargeBoldSystemFont" color="0xFFFFFFFF"/>
+            <Label text="Write this down — you will need it to set up your other Rokus."
+                   translation="[0, 80]" color="0xAAAAAAFF" font="font:MediumSystemFont"/>
+            <Rectangle color="0x2D2D44FF" width="760" height="160" translation="[0, 140]"/>
+            <Label id="codeDisplay" text=""
+                   translation="[0, 165]" width="760" horizAlign="center"
+                   font="font:LargeBoldSystemFont" color="0xF5DD90FF"/>
+            <Label text="Press OK to continue."
+                   translation="[0, 340]" color="0xFFFFFFFF" font="font:MediumSystemFont"/>
+        </Group>
+
+        <!-- Phase 2b: Enter existing code -->
+        <Group id="joinGroup" translation="[492, 140]" visible="false">
+            <Rectangle color="0x2D2D44FF" width="936" height="260" blendingEnabled="true"/>
+            <Label text="Join Existing Household"
+                   translation="[30, 24]" font="font:MediumBoldSystemFont" color="0xFFFFFFFF"/>
+            <Label text="Enter your household code in the keyboard dialog."
+                   translation="[30, 74]" color="0xAAAAAAFF" font="font:SmallSystemFont"/>
+            <TextEditBox id="codeInput" translation="[30, 116]" width="876"/>
+        </Group>
+    </children>
+</component>
