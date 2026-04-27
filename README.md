@@ -1,5 +1,7 @@
 # Show Stash
 
+![Alt text](images/icon_focus_hd.png)
+
 Show Stash is an open-source Roku SceneGraph channel for keeping a short, household-friendly list of favorite shows and launching the streaming service where each show is watched.
 
 The app is meant for the common living-room problem: everyone remembers the show they want to watch, but not always which service has it. Add shows to a shared household list, use optional TMDb lookup to find metadata and likely providers, then select a show from the main screen to open the matching Roku channel.
