@@ -1,5 +1,10 @@
 # Changelog
 
+# 1.15
+
+- Restored normal Up/Down navigation in the show list.
+- Added a custom show list wrapper so Fast Forward adds a show instead of paging the list.
+
 # 1.13
 
 - Added `TRADEMARKS.md`.

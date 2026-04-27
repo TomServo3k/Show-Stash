@@ -28,6 +28,7 @@ sub init()
 
     m.top.setFocus(true)
     m.showList.observeField("itemSelected", "onItemSelected")
+    m.showList.observeField("shortcut", "onShowListShortcut")
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
@@ -80,23 +81,27 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         return true
     end if
 
-    if m.showList.visible
-        if key = "up"
-            focusRelativeShow(-1)
-            return true
-        end if
-
-        if key = "down"
-            focusRelativeShow(1)
-            return true
-        end if
-    end if
-
     return false
 end function
 
 sub onItemSelected()
     launchShow(m.showList.itemSelected)
+end sub
+
+sub onShowListShortcut()
+    shortcut = m.showList.shortcut
+
+    if shortcut = "add"
+        showAddOverlay()
+    else if shortcut = "remove"
+        if m.shows.count() > 0
+            showDeleteDialog(focusedShowIndex())
+        end if
+    else if shortcut = "settings"
+        showSettings()
+    else if shortcut = "launch"
+        launchFocusedShow()
+    end if
 end sub
 
 sub launchFocusedShow()
@@ -244,8 +249,10 @@ sub onSettingsClosed()
 end sub
 
 sub restoreMainFocus()
-    m.showList.setFocus(false)
     m.top.setFocus(true)
+    if m.shows.count() > 0 and m.showList.visible
+        m.showList.setFocus(true)
+    end if
 end sub
 
 ' ── Display ───────────────────────────────────────────────
@@ -275,19 +282,6 @@ sub focusShow(idx as Integer)
 
     m.showList.jumpToItem = idx
     restoreMainFocus()
-end sub
-
-sub focusRelativeShow(delta as Integer)
-    if m.shows.count() = 0 then return
-
-    idx = focusedShowIndex() + delta
-    if idx < 0
-        idx = 0
-    else if idx >= m.shows.count()
-        idx = m.shows.count() - 1
-    end if
-
-    focusShow(idx)
 end sub
 
 function focusedShowIndex() as Integer

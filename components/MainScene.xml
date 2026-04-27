@@ -25,13 +25,13 @@
                color="0x888888FF"
                visible="false"/>
 
-        <LabelList id="showList"
-                   translation="[80, 140]"
-                   width="1760"
-                   height="820"
-                   itemSize="[1760, 72]"
-                   itemSpacing="[0, 4]"
-                   visible="false"/>
+        <ShowList id="showList"
+                  translation="[80, 140]"
+                  width="1760"
+                  height="820"
+                  itemSize="[1760, 72]"
+                  itemSpacing="[0, 4]"
+                  visible="false"/>
 
         <Label id="hintBar"
                text="[OK/Play] Launch    [Fast Forward] Add Show    [*] Settings    [Rewind] Remove Show    [Back/Home] Exit"

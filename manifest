@@ -1,7 +1,7 @@
 title=Show Stash
 subtitle=Household show launcher
 major_version=1
-minor_version=14
+minor_version=15
 build_version=00001
 ui_resolutions=FHD
 mm_icon_focus_fhd=pkg:/images/channel-poster_fhd.png

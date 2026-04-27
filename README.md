@@ -111,6 +111,8 @@ This is a standard Roku SceneGraph channel written in BrightScript and SceneGrap
 |   |-- MetadataSearchTask.xml
 |   |-- MetadataSearchTask.brs
 |   |-- TMDbMetadataProvider.brs
+|   |-- ShowList.xml
+|   |-- ShowList.brs
 |   |-- LaunchTask.xml
 |   |-- LaunchTask.brs
 |   |-- FirebaseTask.xml
@@ -135,6 +137,7 @@ This is a standard Roku SceneGraph channel written in BrightScript and SceneGrap
 ### Key Components
 
 - `MainScene` controls the main show list, keyboard shortcuts, add/settings overlays, deletion, sync, and launch flow.
+- `ShowList` keeps normal list navigation while intercepting main-screen transport shortcuts before Roku's list paging behavior handles them.
 - `AddShow` handles show entry, TMDb match selection, and fallback manual service selection.
 - `SettingsScreen` displays and edits the TMDb API key, toggles app preferences, and includes application attribution/copyright information.
 - `TMDbMetadataProvider` searches TMDb, scores possible matches, fetches watch providers, and maps supported providers to Roku app IDs.
