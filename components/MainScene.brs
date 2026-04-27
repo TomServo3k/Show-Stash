@@ -39,21 +39,6 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         return true
     end if
 
-    if key = "play"
-        launchFocusedShow()
-        return true
-    end if
-
-    if key = "OK" and m.showList.visible
-        launchFocusedShow()
-        return true
-    end if
-
-    if key = "fastforward"
-        showAddOverlay()
-        return true
-    end if
-
     if key = "back" and m.addOverlay <> invalid and m.addOverlay.visible
         if m.top.dialog <> invalid
             m.top.dialog = invalid
@@ -71,6 +56,25 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         end if
     end if
 
+    if not mainSceneCanHandleShowActions()
+        return false
+    end if
+
+    if key = "play"
+        launchFocusedShow()
+        return true
+    end if
+
+    if key = "OK" and m.showList.visible
+        launchFocusedShow()
+        return true
+    end if
+
+    if key = "fastforward"
+        showAddOverlay()
+        return true
+    end if
+
     if key = "back"
         m.top.close = true
         return true
@@ -82,6 +86,16 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     end if
 
     return false
+end function
+
+function mainSceneCanHandleShowActions() as Boolean
+    if m.top.dialog <> invalid then return false
+    if m.deleteDialog <> invalid then return false
+    if m.setupScreen <> invalid then return false
+    if m.settingsScreen <> invalid and m.settingsScreen.visible then return false
+    if m.addOverlay <> invalid and m.addOverlay.visible then return false
+
+    return true
 end function
 
 sub onItemSelected()

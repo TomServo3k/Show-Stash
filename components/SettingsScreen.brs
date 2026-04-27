@@ -20,6 +20,10 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         return true
     end if
 
+    if key = "OK"
+        return true
+    end if
+
     return false
 end function
 
